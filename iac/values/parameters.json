@@ -1,0 +1,10 @@
+[
+    {
+        "ParameterKey": "AppName",
+        "ParameterValue": "AWSBilling"
+    },
+    {
+        "ParameterKey": "Environment",
+        "ParameterValue": "Dev"
+    }
+]

@@ -1,0 +1,65 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  AppName:
+    Type: String
+    Default: "DefaultApp"
+  Environment:
+    Type: String
+    Default: "DefaultEnv"
+  EmailRecipient:
+    Type: String
+    Description: "Email address to receive cost reports."
+
+Resources:
+  LambdaExecutionRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              Service: "lambda.amazonaws.com"
+            Action: "sts:AssumeRole"
+      Policies:
+        - PolicyName: "LambdaPermissions"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - "ses:SendEmail"
+                  - "ce:GetCostAndUsage"
+                  - "resourcegroupstaggingapi:GetResources"
+                Resource: "*"
+
+  CostReportLambda:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      Handler: "index.lambda_handler"
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        ZipFile: !Sub |
+          <Insert Lambda Function Code Here>
+      Runtime: "python3.9"
+      Timeout: 300
+      Environment:
+        Variables:
+          APP_NAME: !Ref AppName
+          ENVIRONMENT: !Ref Environment
+          EMAIL_RECIPIENT: !Ref EmailRecipient
+
+  LambdaTrigger:
+    Type: "AWS::Events::Rule"
+    Properties:
+      ScheduleExpression: "rate(5 minutes)"
+      Targets:
+        - Arn: !GetAtt CostReportLambda.Arn
+          Id: "CostReportLambdaTarget"
+
+  LambdaPermission:
+    Type: "AWS::Lambda::Permission"
+    Properties:
+      FunctionName: !Ref CostReportLambda
+      Action: "lambda:InvokeFunction"
+      Principal: "events.amazonaws.com"
