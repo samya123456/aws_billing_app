@@ -2,6 +2,7 @@
 import boto3
 import json
 import os
+import pandas as pd
 from datetime import datetime, timedelta
 from botocore.exceptions import ClientError
 
@@ -72,11 +73,15 @@ def lambda_handler(event, context):
 
     resources = get_resources_by_tag(tag_key, tag_value)
     total_cost = 0
-
+    detail_data = []
     for resource in resources:
         arn = resource['ResourceARN']
         cost = get_cost_for_resource(arn)
+        detail_data.append(arn, cost)
         total_cost += float(cost)
+
+    #writting data to datafram
+    df = pd.DataFrame(detail_data,columns=["Resource ARN", "Cost"])
 
     email_subject = f"{APP_NAME} Cost Report for {ENVIRONMENT}"
     email_body = f"Total 24-hour cost for {ENVIRONMENT}: ${total_cost:.2f}"

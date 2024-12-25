@@ -9,6 +9,12 @@ Parameters:
   EmailRecipient:
     Type: String
     Description: "Email address to receive cost reports."
+  CodeS3Bucket:
+    Type: string
+    Description: "S3 bucket name which stores code .zip"
+  CodeZipName:
+    Type: String
+    Decription: "Name of the code zip file" 
 
 Resources:
   LambdaExecutionRole:
@@ -31,18 +37,22 @@ Resources:
                   - "ses:SendEmail"
                   - "ce:GetCostAndUsage"
                   - "resourcegroupstaggingapi:GetResources"
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents                  
                 Resource: "*"
 
   CostReportLambda:
     Type: "AWS::Lambda::Function"
     Properties:
+      FunctionName: CostMonitoringLambda
       Handler: "index.lambda_handler"
       Role: !GetAtt LambdaExecutionRole.Arn
       Code:
-        ZipFile: !Sub |
-          <Insert Lambda Function Code Here>
+        S3Bucket: !Ref CodeS3Bucket
+        S3Key: !Ref CodeZipName
       Runtime: "python3.9"
-      Timeout: 300
+      Timeout: 900
       Environment:
         Variables:
           APP_NAME: !Ref AppName
