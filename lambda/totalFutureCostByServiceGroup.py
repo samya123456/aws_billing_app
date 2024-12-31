@@ -86,16 +86,16 @@ def display_cost_forecast_by_service(client, start_date, end_date, lookback_peri
 
 
 if __name__ == "__main__":
-    # Initialize the Cost Explorer client
+    days = 90
+    look_back_days = 30
     client = boto3.client('ce')
     START_DATE = datetime.today().strftime('%Y-%m-%d')  # Current date
-    END_DATE = (datetime.today() + timedelta(days=90)
+    END_DATE = (datetime.today() + timedelta(days=days)
                 ).strftime('%Y-%m-%d')  # Forecast for 3 months
     LOOKBACK_START_DATE = (
-        datetime.today() - timedelta(days=30)).strftime('%Y-%m-%d')
+        datetime.today() - timedelta(days=look_back_days)).strftime('%Y-%m-%d')
     LOOKBACK_END_DATE = datetime.today().strftime('%Y-%m-%d')
 
-    # Time period for fetching services
     lookback_period = {
         'Start': LOOKBACK_START_DATE,
         'End': LOOKBACK_END_DATE
