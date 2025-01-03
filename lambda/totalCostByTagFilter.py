@@ -1,21 +1,12 @@
+import yaml
 import boto3
 from botocore.exceptions import ClientError
+from datetime import datetime
 
 
 def get_cost_and_usage(start_date, end_date, tag_key, tag_values, granularity='MONTHLY', metrics=None):
     """
     Fetch AWS cost and usage based on the provided parameters.
-
-    Args:
-        start_date (str): Start date in YYYY-MM-DD format.
-        end_date (str): End date in YYYY-MM-DD format.
-        tag_key (str): Tag key to filter on.
-        tag_values (list): List of tag values to filter on.
-        granularity (str): Granularity of the cost data ('DAILY' or 'MONTHLY').
-        metrics (list): List of metrics to retrieve. Defaults to ['UnblendedCost'].
-
-    Returns:
-        dict: AWS Cost Explorer response for the given filters.
     """
     if metrics is None:
         metrics = ['UnblendedCost']
@@ -27,7 +18,6 @@ def get_cost_and_usage(start_date, end_date, tag_key, tag_values, granularity='M
         'End': end_date
     }
 
-    # Define the tag filter
     tag_filter = {
         'Tags': {
             'Key': tag_key,
@@ -45,25 +35,46 @@ def get_cost_and_usage(start_date, end_date, tag_key, tag_values, granularity='M
         )
         return response
     except ClientError as e:
-        print(f"Error fetching cost and usage: {e}")
+        print(
+            f"Error fetching cost and usage for tag values {tag_values}: {e}")
         return None
 
 
+def process_cost_usage_from_yaml(yaml_file):
+    with open(yaml_file, 'r') as file:
+        config = yaml.safe_load(file)
+
+    # Extract data for each tag setting
+    tag_settings = config.get("aws_cost_usage", {}).get("tag_settings", [])
+    for setting in tag_settings:
+        tag_key = setting.get("tag_key")
+        tag_value = setting.get("tag_value")
+        granularity = setting.get("granularity", "MONTHLY")
+        metrics = setting.get("metrics", ["UnblendedCost"])
+        time_period = setting.get("time_period", {})
+        start_date = time_period.get("start_date")
+        end_date = time_period.get("end_date")
+
+        print(f"Calling cost and usage for tag value: {tag_value}")
+        result = get_cost_and_usage(
+            start_date=start_date,
+            end_date=end_date,
+            tag_key=tag_key,
+            tag_values=[tag_value],
+            granularity=granularity,
+            metrics=metrics
+        )
+
+        # Print the result
+        if result:
+            print(f"Cost and Usage Response for {tag_value}:")
+            for time_result in result.get('ResultsByTime', []):
+                print(time_result)
+        else:
+            print(f"No data found for tag value: {tag_value}")
+        print("="*40)
+
+
 if __name__ == "__main__":
-    # Parameters (Replace these with your actual values or read from a config file)
-    START_DATE = '2024-12-01'  # Start date (YYYY-MM-DD)
-    END_DATE = '2024-12-31'    # End date (YYYY-MM-DD)
-    TAG_KEY = 'BusinessUnit'   # Tag key
-    TAG_VALUES = ['persostack']  # Tag values as a list
-    GRANULARITY = 'MONTHLY'    # Granularity ('DAILY' or 'MONTHLY')
-    METRICS = ['UnblendedCost']  # Metrics to retrieve
-
-    # Fetch cost and usage
-    result = get_cost_and_usage(
-        START_DATE, END_DATE, TAG_KEY, TAG_VALUES, GRANULARITY, METRICS)
-
-    # Print the response
-    if result:
-        print("Cost and Usage Response:")
-        for time_result in result.get('ResultsByTime', []):
-            print(time_result)
+    yaml_file = "config.yaml"  # Replace with your YAML file name
+    process_cost_usage_from_yaml(yaml_file)

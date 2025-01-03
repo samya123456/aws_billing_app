@@ -1,0 +1,33 @@
+aws_cost_usage:
+  tag_settings:
+    - tag_key: "BusinessUnit"
+      tag_value: "persostack"
+      stack_name: "stack-persostack"
+      granularity: "DAILY"
+      metrics:
+        - "UnblendedCost"
+      total_budget: 500
+      time_period:
+        start_date: "2024-12-01"
+        end_date: "2024-12-31"
+    - tag_key: "BusinessUnit"
+      tag_value: "finance"
+      stack_name: "stack-finance"
+      granularity: "DAILY"
+      metrics:
+        - "UnblendedCost"
+        - "UsageQuantity"
+      total_budget: 700
+      time_period:
+        start_date: "2024-12-01"
+        end_date: "2024-12-31"
+    - tag_key: "BusinessUnit"
+      tag_value: "marketing"
+      stack_name: "stack-marketing"
+      granularity: "MONTHLY"
+      metrics:
+        - "UnblendedCost"
+      total_budget: 300
+      time_period:
+        start_date: "2024-12-01"
+        end_date: "2024-12-31"
