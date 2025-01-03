@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Variables
-LAMBDA_ROOT_DIR="./lambda/ResourceMonitorLambda"
+LAMBDA_ROOT_DIR="./lambda/resource_cost_monitoring"
 STACK_NAME="ResourceCostMonitor"
 TEMPLATE_FILE="template.yaml"
 PARAM_FILE="parameters.json"
@@ -22,13 +22,11 @@ else
   exit 1
 fi
 
-# Step 2: Validate the generated zip file
 if [ ! -f "$ZIP_FILE" ]; then
   echo "Error: Lambda package ($ZIP_FILE) not found."
   exit 1
 fi
 
-# Step 3: Deploy the CloudFormation stack
 if ! aws cloudformation describe-stacks --stack-name "$STACK_NAME" > /dev/null 2>&1; then
   echo "Stack does not exist. Creating stack..."
   aws cloudformation create-stack --stack-name "$STACK_NAME" --template-body file://"$TEMPLATE_FILE" --parameters file://"$PARAM_FILE" --capabilities CAPABILITY_NAMED_IAM
