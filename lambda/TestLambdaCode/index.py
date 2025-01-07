@@ -32,6 +32,7 @@ def get_cost_and_usage(start_date, end_date, tag_key, tag_values, granularity='M
             Metrics=metrics,
             Filter=tag_filter
         )
+        print(response)
         return response
     except ClientError as e:
         print(
@@ -76,7 +77,9 @@ def lambda_handler(event, context):
         time_period = setting.get("time_period", {})
         start_date = time_period.get("start_date")
         end_date = time_period.get("end_date")
-
+        print(tag_key)
+        print(tag_value)
+        print(stack_name)
         # Fetch cost and usage
         response = get_cost_and_usage(
             start_date=start_date,
@@ -87,8 +90,15 @@ def lambda_handler(event, context):
             metrics=metrics
         )
         if response:
-            total_cost = sum(float(item['Total']['Amount'])
-                             for item in response.get('ResultsByTime', []))
+
+            # total_cost = sum(float(item['Total']['Amount'])
+            #                  for item in response.get('ResultsByTime', []))
+            
+            total_cost = sum(
+    float(item['Total']['Amount']) if 'Total' in item and 'Amount' in item['Total'] else 0
+    for item in response.get('ResultsByTime', []))
+            print("total cost =",total_cost)
+
             results.append({
                 "tag_value": tag_value,
                 "total_cost": total_cost,
@@ -96,9 +106,9 @@ def lambda_handler(event, context):
                 "stack_name": stack_name,
                 "status": "over_budget" if total_cost > total_budget else "within_budget"
             })
-
+            print("Debug Point")
             # Delete stack if cost exceeds the budget
-            if total_cost > total_budget:
+            if total_cost >= total_budget:
                 print(
                     f"Total cost for {tag_value} exceeds the budget. Initiating stack deletion for {stack_name}.")
                 delete_stack(stack_name)

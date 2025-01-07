@@ -1,0 +1,99 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CloudFormation template to create an IAM managed policy for
+  permissions related to CloudFormation, Lambda, EC2, S3, EventBridge, Billing
+  API, and more.
+
+Resources:
+
+  CloudFormationManagedPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: PENG-176-CloudFormationManagedPolicy
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          # CloudFormation management permissions
+          - Effect: Allow
+            Action:
+              - cloudformation:*
+            Resource: '*'
+          # Lambda management permissions
+          - Effect: Allow
+            Action:
+              - lambda:CreateFunction
+              - lambda:UpdateFunctionCode
+              - lambda:UpdateFunctionConfiguration
+              - lambda:DeleteFunction
+              - lambda:InvokeFunction
+              - lambda:GetFunction
+            Resource: '*'
+          # EC2 management permissions
+          - Effect: Allow
+            Action:
+              - ec2:RunInstances
+              - ec2:TerminateInstances
+              - ec2:DescribeInstances
+              - ec2:StartInstances
+              - ec2:StopInstances
+              - ec2:CreateTags
+              - ec2:DeleteTags
+              - ec2:CreateSecurityGroup
+              - ec2:DescribeSecurityGroups
+              - ec2:DeleteSecurityGroup          
+            Resource: '*'
+          # S3 permissions
+          - Effect: Allow
+            Action:
+              - s3:CreateBucket
+              - s3:DeleteBucket
+              - s3:GetObject
+              - s3:PutObject
+              - s3:ListBucket
+              - s3:ListAllMyBuckets
+            Resource: '*'
+          # CloudWatch Logs permissions
+          - Effect: Allow
+            Action:
+              - logs:CreateLogGroup
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource: '*'
+          # EventBridge permissions
+          - Effect: Allow
+            Action:
+              - events:PutRule
+              - events:PutTargets
+              - events:DeleteRule
+              - events:RemoveTargets
+              - events:DescribeRule
+            Resource: '*'
+          # SES permissions
+          - Effect: Allow
+            Action:
+              - ses:SendEmail
+            Resource: '*'
+          # Cost Explorer permissions
+          - Effect: Allow
+            Action:
+              - ce:GetCostAndUsage
+              - ce:GetReservationUtilization
+              - ce:GetRightsizingRecommendation
+            Resource: '*'
+          # Billing API permissions
+          - Effect: Allow
+            Action:
+              - billing:ViewBilling
+              - budgets:ViewBudget
+              - budgets:DescribeBudget
+              - budgets:DescribeBudgetActionsForAccount
+            Resource: '*'
+          # IAM PassRole permission
+          - Effect: Allow
+            Action:
+              - iam:PassRole
+            Resource: '*'
+
+Outputs:
+  ManagedPolicyArn:
+    Description: ARN of the IAM Managed Policy.
+    Value: !Ref CloudFormationManagedPolicy
