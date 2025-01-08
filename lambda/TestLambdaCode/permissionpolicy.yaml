@@ -26,6 +26,9 @@ Resources:
               - lambda:DeleteFunction
               - lambda:InvokeFunction
               - lambda:GetFunction
+              - lambda:TagResource
+              - lambda:UntagResource
+              - lambda:ListTags
             Resource: '*'
           # EC2 management permissions
           - Effect: Allow
@@ -50,6 +53,12 @@ Resources:
               - s3:PutObject
               - s3:ListBucket
               - s3:ListAllMyBuckets
+              - s3:PutBucketTagging
+              - s3:GetBucketTagging
+              - s3:DeleteBucketTagging
+              - s3:PutObjectTagging
+              - s3:GetObjectTagging
+              - s3:DeleteObjectTagging
             Resource: '*'
           # CloudWatch Logs permissions
           - Effect: Allow
@@ -91,6 +100,7 @@ Resources:
           - Effect: Allow
             Action:
               - iam:PassRole
+              - iam:ListPolicyVersions
             Resource: '*'
 
 Outputs:
