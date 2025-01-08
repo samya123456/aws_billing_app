@@ -59,6 +59,8 @@ Resources:
               - s3:PutObjectTagging
               - s3:GetObjectTagging
               - s3:DeleteObjectTagging
+              - s3:PutBucketVersioning
+              - s3:GetBucketVersioning
             Resource: '*'
           # CloudWatch Logs permissions
           - Effect: Allow
