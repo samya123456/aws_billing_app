@@ -52,6 +52,7 @@ Resources:
               - s3:GetObject
               - s3:PutObject
               - s3:ListBucket
+              - s3:DeleteObject
               - s3:ListAllMyBuckets
               - s3:PutBucketTagging
               - s3:GetBucketTagging
@@ -103,6 +104,22 @@ Resources:
             Action:
               - iam:PassRole
               - iam:ListPolicyVersions
+              - iam:CreateRole
+              - iam:DeleteRole
+              - iam:GetRole
+              - iam:ListRoles
+              - iam:CreatePolicy
+              - iam:DeletePolicy
+              - iam:DeleteRolePolicy
+              - iam:AttachRolePolicy
+              - iam:DetachRolePolicy
+              - iam:ListPolicies
+              - iam:GetPolicy
+              - iam:ListAttachedRolePolicies
+              - iam:TagResource
+              - iam:UntagResource
+              - iam:TagRole
+              - iam:UntagRole
             Resource: '*'
 
 Outputs:
