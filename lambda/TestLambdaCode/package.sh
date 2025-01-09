@@ -2,7 +2,7 @@
 
 DEFAULT_LAMBDA_DIR="lambda"
 DEFAULT_ZIP_FILE="lambda_package.zip"
-S3BucketName="cost-calculator-python-perso"
+S3BucketName="peng-176-cost-calculator-python-bucket"
 S3BucketDeployRegion="us-east-1" ##change region based on working aws region
 
 # Accept parameters or use default values

@@ -32,7 +32,7 @@ def get_cost_and_usage(start_date, end_date, tag_key, tag_values, granularity='M
             Metrics=metrics,
             Filter=tag_filter
         )
-        print(response)
+        #print(response)
         return response
     except ClientError as e:
         print(
@@ -104,18 +104,19 @@ def lambda_handler(event, context):
                 "total_cost": total_cost,
                 "total_budget": total_budget,
                 "stack_name": stack_name,
-                "status": "over_budget" if total_cost > total_budget else "within_budget"
+                "status": "over_budget" if total_cost >= total_budget else "within_budget"
             })
-            print("Debug Point")
+            print("Debug Point1")
             # Delete stack if cost exceeds the budget
             if total_cost >= total_budget:
                 print(
                     f"Total cost for {tag_value} exceeds the budget. Initiating stack deletion for {stack_name}.")
                 delete_stack(stack_name)
-        else:
-            results.append({
+                print("Debug Point2")
+            else:
+              results.append({
                 "tag_value": tag_value,
                 "error": "No cost data available"
             })
-
+    print(results)
     return {"status": "success", "data": results}

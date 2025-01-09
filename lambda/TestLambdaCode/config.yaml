@@ -6,7 +6,7 @@ aws_cost_usage:
       granularity: "DAILY"
       metrics:
         - "UnblendedCost"
-      total_budget: 0
+      total_budget: 1
       time_period:
         start_date: "2025-01-01"
         end_date: "2025-01-07"

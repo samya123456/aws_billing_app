@@ -6,15 +6,15 @@ Parameters:
   Environment:
     Type: String
     Default: "DefaultEnv"
-  EmailRecipient:
-    Type: String
-    Description: "Email address to receive cost reports."
+  # EmailRecipient:
+  #   Type: String
+  #   Description: "Email address to receive cost reports."
   CodeS3Bucket:
-    Type: string
+    Type: String
     Description: "S3 bucket name which stores code .zip"
   CodeZipName:
     Type: String
-    Decription: "Name of the code zip file" 
+    Description: "Name of the code zip file" 
 
 Resources:
   LambdaExecutionRole:
@@ -39,7 +39,8 @@ Resources:
                   - "resourcegroupstaggingapi:GetResources"
                   - logs:CreateLogGroup
                   - logs:CreateLogStream
-                  - logs:PutLogEvents                  
+                  - logs:PutLogEvents 
+                  - cloudformation:*                 
                 Resource: "*"
 
   CostReportLambda:
@@ -57,19 +58,19 @@ Resources:
         Variables:
           APP_NAME: !Ref AppName
           ENVIRONMENT: !Ref Environment
-          EMAIL_RECIPIENT: !Ref EmailRecipient
+#          EMAIL_RECIPIENT: !Ref EmailRecipient
 
-  LambdaTrigger:
-    Type: "AWS::Events::Rule"
-    Properties:
-      ScheduleExpression: "rate(5 minutes)"
-      Targets:
-        - Arn: !GetAtt CostReportLambda.Arn
-          Id: "CostReportLambdaTarget"
+  # LambdaTrigger:
+  #   Type: "AWS::Events::Rule"
+  #   Properties:
+  #     ScheduleExpression: "rate(5 minutes)"
+  #     Targets:
+  #       - Arn: !GetAtt CostReportLambda.Arn
+  #         Id: "CostReportLambdaTarget"
 
-  LambdaPermission:
-    Type: "AWS::Lambda::Permission"
-    Properties:
-      FunctionName: !Ref CostReportLambda
-      Action: "lambda:InvokeFunction"
-      Principal: "events.amazonaws.com"
+  # LambdaPermission:
+  #   Type: "AWS::Lambda::Permission"
+  #   Properties:
+  #     FunctionName: !Ref CostReportLambda
+  #     Action: "lambda:InvokeFunction"
+  #     Principal: "events.amazonaws.com"

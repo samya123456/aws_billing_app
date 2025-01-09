@@ -1,0 +1,32 @@
+aws_cost_usage:
+  tag_settings:
+    - tag_key: "BusinessUnit"
+      tag_value: "pesto-test-stack"
+      stack_name: "pesto-test-aws-resource-stack"
+      granularity: "DAILY"
+      metrics:
+        - "UnblendedCost"
+      total_budget: 1
+      time_period:
+        start_date: "2025-01-01"
+        end_date: "2025-01-07"
+    - tag_key: "BusinessUnit"
+      tag_value: "pesto-ec2-stack"
+      stack_name: "pesto-test-aws-resource-stack-2"
+      granularity: "DAILY"
+      metrics:
+        - "UnblendedCost"
+      total_budget: 0
+      time_period:
+         start_date: "2025-01-05"
+         end_date: "2025-01-07"
+    - tag_key: "BusinessUnit"
+      tag_value: "marketing"
+      stack_name: "stack-marketing"
+      granularity: "MONTHLY"
+      metrics:
+        - "UnblendedCost"
+      total_budget: 300
+      time_period:
+        start_date: "2024-12-01"
+        end_date: "2024-12-31"

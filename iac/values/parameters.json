@@ -9,7 +9,7 @@
     },
     {
         "ParameterKey": "CodeS3Bucket",
-        "ParameterValue": "cost-calculator-python-perso"
+        "ParameterValue": "peng-176-cost-calculator-python-bucket"
     },
     {
         "ParameterKey": "CodeZipName",

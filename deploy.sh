@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Variables
-LAMBDA_ROOT_DIR="./lambda/resource_cost_monitoring"
-STACK_NAME="ResourceCostMonitor"
-TEMPLATE_FILE="template.yaml"
-PARAM_FILE="parameters.json"
+LAMBDA_ROOT_DIR="./lambda/resource_cost_monitoring_lambda_deploy"
+STACK_NAME="peng-176-resource-cos-monitor-stack"
+TEMPLATE_FILE="./iac/template.yaml"
+PARAM_FILE="./iac/values/parameters.json"
 PACKAGE_SCRIPT="$LAMBDA_ROOT_DIR/package.sh"
 ZIP_FILE="$LAMBDA_ROOT_DIR/lambda_package.zip"
 
@@ -12,7 +12,7 @@ ZIP_FILE="$LAMBDA_ROOT_DIR/lambda_package.zip"
 if [ -f "$PACKAGE_SCRIPT" ]; then
   echo "Running packaging script..."
   chmod +x "$PACKAGE_SCRIPT"
-  ./"$PACKAGE_SCRIPT" "$LAMBDA_ROOT_DIR" "$ZIP_FILE"
+  ./"$PACKAGE_SCRIPT"
   if [ $? -ne 0 ]; then
     echo "Error: Packaging script failed."
     exit 1
@@ -22,10 +22,10 @@ else
   exit 1
 fi
 
-if [ ! -f "$ZIP_FILE" ]; then
-  echo "Error: Lambda package ($ZIP_FILE) not found."
-  exit 1
-fi
+# if [ ! -f "$ZIP_FILE" ]; then
+#   echo "Error: Lambda package ($ZIP_FILE) not found."
+#   exit 1
+# fi
 
 if ! aws cloudformation describe-stacks --stack-name "$STACK_NAME" > /dev/null 2>&1; then
   echo "Stack does not exist. Creating stack..."
