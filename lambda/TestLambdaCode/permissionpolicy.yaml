@@ -29,6 +29,18 @@ Resources:
               - lambda:TagResource
               - lambda:UntagResource
               - lambda:ListTags
+              - lambda:ListFunctions
+              - lambda:GetPolicy
+              - lambda:GetAlias
+              - lambda:ListVersionsByFunction
+              - lambda:ListAliases
+              - lambda:GetEventSourceMapping
+              - lambda:ListEventSourceMappings
+              - lambda:GetAccountSettings
+              - lambda:AddPermission
+              - lambda:GetFunctionConcurrency
+              - lambda:InvokeFunctionUrl
+              
             Resource: '*'
           # EC2 management permissions
           - Effect: Allow
@@ -107,16 +119,28 @@ Resources:
               - iam:CreateRole
               - iam:DeleteRole
               - iam:GetRole
+              - iam:ListRolePolicies
+              - iam:ListRoleTags
               - iam:ListRoles
               - iam:CreatePolicy
+              - iam:CreatePolicyVersion
+              - iam:CreateServiceLinkedRole
+              - iam:DeletePolicyVersion
+              - iam:DeleteRolePermissionsBoundary
               - iam:DeletePolicy
+              - iam:PutRolePolicy
               - iam:DeleteRolePolicy
               - iam:AttachRolePolicy
               - iam:DetachRolePolicy
               - iam:ListPolicies
+              - iam:ListPolicyTags
               - iam:GetPolicy
+              - iam:GetRolePolicy
+              - iam:GetPolicyVersion
               - iam:ListAttachedRolePolicies
               - iam:TagResource
+              - iam:TagPolicy
+              - iam:UntagPolicy
               - iam:UntagResource
               - iam:TagRole
               - iam:UntagRole
