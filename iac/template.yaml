@@ -40,7 +40,11 @@ Resources:
                   - logs:CreateLogGroup
                   - logs:CreateLogStream
                   - logs:PutLogEvents 
-                  - cloudformation:*                 
+                  - cloudformation:*     
+                  - ec2:*
+                  - s3:*
+                  - events:*
+                  - iam:*            
                 Resource: "*"
 
   CostReportLambda:

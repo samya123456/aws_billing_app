@@ -6,13 +6,13 @@ STACK_NAME="peng-176-resource-cost-monitor-stack"
 TEMPLATE_FILE="./iac/template.yaml"
 PARAM_FILE="./iac/values/parameters.json"
 PACKAGE_SCRIPT="$LAMBDA_ROOT_DIR/package.sh"
-ZIP_FILE="$LAMBDA_ROOT_DIR/lambda_package.zip"
+ZIP_FILE="$LAMBDA_ROOT_DIR/lambda_package_123.zip"
 
 # Step 1: Run the packaging script
 if [ -f "$PACKAGE_SCRIPT" ]; then
   echo "Running packaging script..."
   chmod +x "$PACKAGE_SCRIPT"
-  ./"$PACKAGE_SCRIPT"
+  ./"$PACKAGE_SCRIPT" $LAMBDA_ROOT_DIR $ZIP_FILE
   if [ $? -ne 0 ]; then
     echo "Error: Packaging script failed."
     exit 1

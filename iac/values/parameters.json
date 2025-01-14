@@ -13,6 +13,6 @@
     },
     {
         "ParameterKey": "CodeZipName",
-        "ParameterValue": "lambda_package.zip"
+        "ParameterValue": "lambda_package_123.zip"
     }
 ]

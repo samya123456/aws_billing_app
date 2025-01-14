@@ -1,16 +1,16 @@
 aws_cost_usage:
   tag_settings:
-    - tag_key: "BusinessUnit"
+    - tag_key: "businessUnit"
       tag_value: "pesto-test-stack"
-      stack_name: "pesto-test-aws-resource-stack"
+      stack_name: "PENG-176-test-aws-resource-stack"
       granularity: "DAILY"
       metrics:
         - "UnblendedCost"
-      total_budget: 1
+      total_budget: 0
       time_period:
         start_date: "2025-01-01"
         end_date: "2025-01-07"
-    - tag_key: "BusinessUnit"
+    - tag_key: "BßusinessUnit"
       tag_value: "pesto-ec2-stack"
       stack_name: "pesto-test-aws-resource-stack-2"
       granularity: "DAILY"

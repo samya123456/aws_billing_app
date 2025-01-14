@@ -39,8 +39,7 @@ Resources:
               - lambda:GetAccountSettings
               - lambda:AddPermission
               - lambda:GetFunctionConcurrency
-              - lambda:InvokeFunctionUrl
-              
+              - lambda:InvokeFunctionUrl              
             Resource: '*'
           # EC2 management permissions
           - Effect: Allow
