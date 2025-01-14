@@ -2,7 +2,7 @@
 
 # Variables
 LAMBDA_ROOT_DIR="./lambda/resource_cost_monitoring_lambda_deploy"
-STACK_NAME="peng-176-resource-cos-monitor-stack"
+STACK_NAME="peng-176-resource-cost-monitor-stack"
 TEMPLATE_FILE="./iac/template.yaml"
 PARAM_FILE="./iac/values/parameters.json"
 PACKAGE_SCRIPT="$LAMBDA_ROOT_DIR/package.sh"

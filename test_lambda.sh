@@ -1,0 +1,1 @@
+aws lambda invoke --function-name CostMonitoringLambda output.json
