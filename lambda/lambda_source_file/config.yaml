@@ -1,0 +1,23 @@
+aws_cost_usage:
+  tag_settings:
+    - tag_key: "businessUnit"
+      tag_value: "pesto-test-stack"
+      stack_name: "PENG-176-test-aws-resource-stack"
+      granularity: "MONTHLY"
+      metrics:
+        - "UnblendedCost"
+      total_budget: 0
+    - tag_key: "BßusinessUnit"
+      tag_value: "pesto-ec2-stack"
+      stack_name: "pesto-test-aws-resource-stack-2"
+      granularity: "DAILY"
+      metrics:
+        - "UnblendedCost"
+      total_budget: 0
+    - tag_key: "BusinessUnit"
+      tag_value: "marketing"
+      stack_name: "stack-marketing"
+      granularity: "MONTHLY"
+      metrics:
+        - "UnblendedCost"
+      total_budget: 300

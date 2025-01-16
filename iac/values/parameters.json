@@ -14,5 +14,13 @@
     {
         "ParameterKey": "CodeZipName",
         "ParameterValue": "lambda_package_123.zip"
+    },
+    {
+        "ParameterKey": "S3SourceBucketName",
+        "ParameterValue": "peng-176-cost-monitoring-lambda-source-bucket"
+    },
+    {
+        "ParameterKey": "S3FileName",
+        "ParameterValue": "version-1/config.yaml"
     }
 ]

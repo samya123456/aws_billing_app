@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Variables
-LAMBDA_ROOT_DIR="./lambda/resource_cost_monitoring_lambda_deploy"
+LAMBDA_ROOT_DIR="./lambda/resource_cost_monitoring_lambda_deploy_with_s3"
 STACK_NAME="peng-176-resource-cost-monitor-stack"
 TEMPLATE_FILE="./iac/template.yaml"
 PARAM_FILE="./iac/values/parameters.json"
@@ -22,10 +22,22 @@ else
   exit 1
 fi
 
-# if [ ! -f "$ZIP_FILE" ]; then
-#   echo "Error: Lambda package ($ZIP_FILE) not found."
-#   exit 1
-# fi
+S3BucketName="peng-176-cost-monitoring-lambda-source-bucket"
+S3BucketDeployRegion="us-east-1"
+LambdaSourceFile="./lambda/lambda_source_file/config.yaml"
+
+if aws s3 ls $S3BucketName 2>&1 | grep -q 'NoSuchBucket'; then
+    echo "Creating S3 bucket."
+    aws s3api create-bucket --bucket $S3BucketName --region ${S3BucketDeployRegion}
+    else
+    echo "Bucket already exists..."
+fi
+
+echo "Copying Lambda source file into S3 bucket"
+
+aws s3 cp ${LambdaSourceFile} s3://${S3BucketName}/version-1/
+
+echo "Starting deployment"
 
 if ! aws cloudformation describe-stacks --stack-name "$STACK_NAME" > /dev/null 2>&1; then
   echo "Stack does not exist. Creating stack..."
@@ -38,3 +50,6 @@ else
   aws cloudformation wait stack-update-complete --stack-name "$STACK_NAME"
   echo "Stack updated successfully."
 fi
+
+
+

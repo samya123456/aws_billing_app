@@ -14,7 +14,13 @@ Parameters:
     Description: "S3 bucket name which stores code .zip"
   CodeZipName:
     Type: String
-    Description: "Name of the code zip file" 
+    Description: "Name of the code zip file"
+  S3SourceBucketName:
+    Type: String
+    Description: "S3 bucket name for lambda source file"  
+  S3FileName:
+    Type: String
+    Description: "S3 bucket file name"      
 
 Resources:
   LambdaExecutionRole:
@@ -62,6 +68,8 @@ Resources:
         Variables:
           APP_NAME: !Ref AppName
           ENVIRONMENT: !Ref Environment
+          S3_FILE_NAME: !Ref S3FileName
+          S3_SOURCE_BUCKET: !Ref S3SourceBucketName
 #          EMAIL_RECIPIENT: !Ref EmailRecipient
 
   # LambdaTrigger:
