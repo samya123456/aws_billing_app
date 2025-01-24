@@ -1,0 +1,51 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CloudFormation template to provision an RDS instance
+
+Resources:
+  MyRDSInstance:
+    Type: 'AWS::RDS::DBInstance'
+    Properties:
+      DBInstanceIdentifier: 'mydbinstance'
+      AllocatedStorage: '20'  # Size of the storage in GB
+      DBInstanceClass: 'db.t3.micro'  # RDS instance type (adjust as needed)
+      Engine: 'mysql'  # Database engine (e.g., mysql, postgres, etc.)
+      EngineVersion: '8.0.23'  # Version of the MySQL engine
+      MasterUsername: 'admin'  # Master username for the database
+      MasterUserPassword: 'rds-test-123' # Password for the master user
+      DBName: 'mydatabase'  # The database name
+      #VPCSecurityGroups:
+      #  - Ref: MyDBSecurityGroup  # Security group for RDS instance
+      MultiAZ: false  # Set to true for Multi-AZ deployment (high availability)
+      BackupRetentionPeriod: 7  # Number of days to retain backups
+      PubliclyAccessible: true  # Whether the DB instance is publicly accessible
+      StorageType: 'gp2'  # Storage type (General Purpose SSD)
+      Tags:
+        - Key: 'businessUnit'
+          Value: 'pesto-test-stack-peng-176'
+
+  # Security Group for RDS instance
+  # MyDBSecurityGroup:
+  #   Type: 'AWS::EC2::SecurityGroup'
+  #   Properties:
+  #     GroupDescription: 'Security group for RDS instance'
+  #     SecurityGroupIngress:
+  #       - IpProtocol: 'tcp'
+  #         FromPort: '3306'  # MySQL default port
+  #         ToPort: '3306'
+  #         CidrIp: '0.0.0.0/0'  # Adjust based on your security needs
+
+  # DBPassword parameter for master password
+  # DBPassword:
+  #   Type: 'AWS::SecretsManager::Secret'
+  #   Properties:
+  #     Name: 'MyRDSInstancePassword'
+  #     Description: 'Master password for the RDS instance'
+  #     SecretString: !Sub '{"username": "admin", "password": "MyPassword123"}'
+
+Outputs:
+  RDSInstanceEndpoint:
+    Description: 'The endpoint of the RDS instance'
+    Value: !GetAtt MyRDSInstance.Endpoint.Address
+  RDSInstanceIdentifier:
+    Description: 'The identifier of the RDS instance'
+    Value: !Ref MyRDSInstance

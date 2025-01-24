@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CloudFormation Template to create an EC2 instance
+
+Resources:
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t3.large
+      ImageId: ami-0454e52560c7f5c55 # Replace with a valid AMI ID for your region
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          yum update -y
+          yum install -y httpd
+          systemctl start httpd
+          systemctl enable httpd  
+      Tags:
+        - Key: businessUnit
+          Value: pesto-test-stack
+
+
+Outputs:
+  InstanceId:
+    Description: The Instance ID of the EC2 instance
+    Value: !Ref EC2Instance
+  InstancePublicIP:
+    Description: The public IP address of the EC2 instance
+    Value: !GetAtt EC2Instance.PublicIp
