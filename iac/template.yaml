@@ -72,17 +72,21 @@ Resources:
           S3_SOURCE_BUCKET: !Ref S3SourceBucketName
 #          EMAIL_RECIPIENT: !Ref EmailRecipient
 
-  # LambdaTrigger:
-  #   Type: "AWS::Events::Rule"
-  #   Properties:
-  #     ScheduleExpression: "rate(5 minutes)"
-  #     Targets:
-  #       - Arn: !GetAtt CostReportLambda.Arn
-  #         Id: "CostReportLambdaTarget"
+  LambdaTrigger:
+    Type: "AWS::Events::Rule"
+    Properties:
+      Name: "Cost-Lambda-Event-Rule"
+      Description: "Event Rule to schedule Cost Monitoring Lambda"
+      State: ENABLED
+      ScheduleExpression: "cron(0 8 * * ? *)"
+      Targets:
+        - Arn: !GetAtt CostReportLambda.Arn
+          Id: "CostMonitoringtLambdaTarget"
 
-  # LambdaPermission:
-  #   Type: "AWS::Lambda::Permission"
-  #   Properties:
-  #     FunctionName: !Ref CostReportLambda
-  #     Action: "lambda:InvokeFunction"
-  #     Principal: "events.amazonaws.com"
+  LambdaPermission:
+    Type: "AWS::Lambda::Permission"
+    Properties:
+      FunctionName: !Ref CostReportLambda
+      Action: "lambda:InvokeFunction"
+      Principal: "events.amazonaws.com"
+      SourceArn: !GetAtt LambdaTrigger.Arn
