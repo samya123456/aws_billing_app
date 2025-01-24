@@ -67,8 +67,8 @@ if __name__ == "__main__":
         start_date = (datetime.utcnow() - timedelta(days=30)).date().isoformat()
 
         # Define tag filter details
-        tag_key = "BusinessUnit"  # Replace with your tag key
-        tag_value = "persostack123"  # Replace with your tag value
+        tag_key = "businessUnit"  # Replace with your tag key
+        tag_value = "pesto-test-stack"  # Replace with your tag value
 
         # Get cost grouped by service
         response = get_cost_by_service_with_tag(

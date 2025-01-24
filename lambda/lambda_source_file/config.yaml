@@ -6,7 +6,7 @@ aws_cost_usage:
       granularity: "MONTHLY"
       metrics:
         - "UnblendedCost"
-      total_budget: 0
+      total_budget: 10
     - tag_key: "BßusinessUnit"
       tag_value: "pesto-ec2-stack"
       stack_name: "pesto-test-aws-resource-stack-2"
