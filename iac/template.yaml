@@ -6,17 +6,40 @@ Parameters:
   Environment:
     Type: String
     Default: "DefaultEnv"
-  EmailRecipient:
-    Type: String
-    Description: "Email address to receive cost reports."
   CodeS3Bucket:
-    Type: string
+    Type: String
     Description: "S3 bucket name which stores code .zip"
   CodeZipName:
     Type: String
-    Decription: "Name of the code zip file" 
+    Description: "Name of the code zip file"
+  S3SourceBucketName:
+    Type: String
+    Description: "S3 bucket name for lambda source file"  
+  S3FileName:
+    Type: String
+    Description: "S3 bucket file name"
+  SNSTopicName:
+    Type: String
+    Description: "SNS Topic Name"      
+  EmailRecipient:
+    Type: String
+    Description: "Email id of the recipient"   
+  EmailRecipient02:
+    Type: String
+    Description: "Email id of the recipient" 
+  EmailRecipient03:
+    Type: String
+    Description: "Email id of the recipient"   
+  EmailRecipient04:
+    Type: String
+    Description: "Email id of the recipient"           
+  ScheduleExpression:
+    Type: String
+    Description: "Schedule Expression for the event rule"     
+
 
 Resources:
+
   LambdaExecutionRole:
     Type: "AWS::IAM::Role"
     Properties:
@@ -34,13 +57,343 @@ Resources:
             Statement:
               - Effect: "Allow"
                 Action:
-                  - "ses:SendEmail"
-                  - "ce:GetCostAndUsage"
                   - "resourcegroupstaggingapi:GetResources"
-                  - logs:CreateLogGroup
-                  - logs:CreateLogStream
-                  - logs:PutLogEvents                  
+                  - cloudformation:*          
                 Resource: "*"
+              - Effect: Allow
+                Action:  
+                  - lambda:CreateFunction
+                  - lambda:UpdateFunctionCode
+                  - lambda:UpdateFunctionConfiguration
+                  - lambda:DeleteFunction
+                  - lambda:InvokeFunction
+                  - lambda:GetFunction
+                  - lambda:TagResource
+                  - lambda:UntagResource
+                  - lambda:ListTags
+                  - lambda:ListFunctions
+                  - lambda:GetPolicy
+                  - lambda:CreateAlias
+                  - lambda:DeleteAlias
+                  - lambda:GetAlias
+                  - lambda:PublishVersion
+                  - lambda:ListVersionsByFunction
+                  - lambda:ListAliases
+                  - lambda:GetEventSourceMapping
+                  - lambda:ListEventSourceMappings
+                  - lambda:GetAccountSettings
+                  - lambda:AddPermission
+                  - lambda:RemovePermission
+                  - lambda:GetFunctionConcurrency
+                  - lambda:InvokeFunctionUrl
+                  - lambda:PutProvisionedConcurrencyConfig
+                  - lambda:DeleteProvisionedConcurrencyConfig
+                  - lambda:GetProvisionedConcurrencyConfig
+                Resource: '*'
+            # EC2 permissions
+              - Effect: Allow
+                Action:
+                  - ec2:RunInstances
+                  - ec2:TerminateInstances
+                  - ec2:DescribeInstances
+                  - ec2:StartInstances
+                  - ec2:StopInstances
+                  - ec2:CreateTags
+                  - ec2:DeleteTags
+                  - ec2:CreateSecurityGroup
+                  - ec2:DescribeSecurityGroups
+                  - ec2:DeleteSecurityGroup
+                  - ec2:DescribeSubnets
+                  - ec2:DescribeVpcs
+                  - ec2:CreateNetworkInterface
+                  - ec2:DescribeNetworkInterfaces
+                  - ec2:DeleteNetworkInterface
+                  - ec2:AssignPrivateIpAddresses
+                  - ec2:UnassignPrivateIpAddresses
+                Resource: "*"
+            # S3 permissions
+              - Effect: Allow
+                Action:
+                  - s3:CreateBucket
+                  - s3:DeleteBucket
+                  - s3:GetObject
+                  - s3:PutObject
+                  - s3:ListBucket
+                  - s3:DeleteObject
+                  - s3:ListAllMyBuckets
+                  - s3:PutBucketTagging
+                  - s3:GetBucketTagging
+                  - s3:DeleteBucketTagging
+                  - s3:PutObjectTagging
+                  - s3:GetObjectTagging
+                  - s3:DeleteObjectTagging
+                  - s3:PutBucketVersioning
+                  - s3:GetBucketVersioning
+                Resource: '*'  
+              # CloudWatch Logs permissions
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:DeleteLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                  - logs:DeleteLogGroup
+                  - logs:DescribeLogGroups
+                Resource: '*'
+              # EventBridge permissions
+              - Effect: Allow
+                Action:
+                  - events:PutRule
+                  - events:PutTargets
+                  - events:DeleteRule
+                  - events:RemoveTargets
+                  - events:DescribeRule
+                Resource: '*'
+              # SES permissions
+              - Effect: Allow
+                Action:
+                  - ses:SendEmail
+                Resource: '*'
+              # Cost Explorer permissions
+              - Effect: Allow
+                Action:
+                  - ce:GetCostAndUsage
+                  - ce:GetReservationUtilization
+                  - ce:GetRightsizingRecommendation
+                Resource: '*'
+              # Billing API permissions
+              - Effect: Allow
+                Action:
+                  - billing:ViewBilling
+                  - budgets:ViewBudget
+                  - budgets:DescribeBudget
+                  - budgets:DescribeBudgetActionsForAccount
+                Resource: '*'    
+              # IAM PassRole permission
+              - Effect: Allow
+                Action:
+                  - iam:PassRole
+                  - iam:ListPolicyVersions
+                  - iam:CreateRole
+                  - iam:DeleteRole
+                  - iam:GetRole
+                  - iam:ListRolePolicies
+                  - iam:ListRoleTags
+                  - iam:ListRoles
+                  - iam:CreatePolicy
+                  - iam:CreatePolicyVersion
+                  - iam:CreateServiceLinkedRole
+                  - iam:DeletePolicyVersion
+                  - iam:DeleteRolePermissionsBoundary
+                  - iam:DeletePolicy
+                  - iam:PutRolePolicy
+                  - iam:DeleteRolePolicy
+                  - iam:AttachRolePolicy
+                  - iam:DetachRolePolicy
+                  - iam:ListPolicies
+                  - iam:ListPolicyTags
+                  - iam:GetPolicy
+                  - iam:GetRolePolicy
+                  - iam:GetPolicyVersion
+                  - iam:ListAttachedRolePolicies
+                  - iam:TagResource
+                  - iam:TagPolicy
+                  - iam:UntagPolicy
+                  - iam:UntagResource
+                  - iam:TagRole
+                  - iam:UntagRole
+                Resource: '*'
+              # Amazon Connect permissions
+              - Effect: Allow
+                Action:
+                  - connect:SearchAvailablePhoneNumbers
+                  - connect:AssociatePhoneNumberContactFlow
+                  - connect:ClaimPhoneNumber
+                  - connect:ReleasePhoneNumber
+                  - connect:DisassociatePhoneNumberContactFlow
+                  - connect:DescribePhoneNumber
+                  - connect:AssociateLambdaFunction
+                  - connect:DisassociateLambdaFunction
+                  - connect:DisassociateBot
+                  - connect:AssociateLexBot
+                  - connect:AssociateBot
+                  - connect:DisassociateLexBot
+                  - connect:ListBots
+                  - connect:ListLexBots
+                  - connect:ListLambdaFunctions
+                  - connect:ListContactFlows
+                  - connect:ListContactFlowVersions
+                  - connect:DescribeContactFlow
+                  - connect:SearchContactFlows
+                  - connect:CreateContactFlow
+                  - connect:CreateContactFlowVersion
+                  - connect:DeleteContactFlow
+                  - connect:UpdateContactFlowContent
+                  - connect:UpdateContactFlowMetadata
+                  - connect:UpdateContactFlowName
+                  - connect:AssociateFlow
+                  - connect:ListFlowAssociations
+                  - connect:ListIntegrationAssociations
+                  - connect:DisassociateFlow
+                Resource:
+                  - '*'
+              # Lex permissions
+              - Effect: Allow
+                Action:
+                  - lex:CreateBot
+                  - lex:DeleteBot
+                  - lex:UpdateBot
+                  - lex:CreateBotAlias
+                  - lex:DeleteBotAlias
+                  - lex:UpdateBotAlias
+                  - lex:CreateBotLocale
+                  - lex:DeleteBotLocale
+                  - lex:UpdateBotLocale
+                  - lex:CreateBotVersion
+                  - lex:DeleteBotVersion
+                  - lex:CreateIntent
+                  - lex:DeleteIntent
+                  - lex:UpdateIntent
+                  - lex:CreateSlot
+                  - lex:DeleteSlot
+                  - lex:UpdateSlot
+                  - lex:CreateSlotType
+                  - lex:DeleteSlotType
+                  - lex:UpdateSlotType
+                  - lex:GetBots
+                  - lex:GetBot
+                  - lex:CreateResourcePolicy
+                  - lex:DeleteResourcePolicy
+                  - lex:UpdateResourcePolicy
+                  - lex:DescribeBotAlias
+                  - lex:ListBotAliases
+                  - lex:ListBots
+                  - lex:DescribeBot
+                  - lex:DescribeBotLocale
+                  - lex:DescribeBotVersion
+                  - lex:DescribeCustomVocabulary
+                  - lex:DescribeCustomVocabularyMetadata
+                  - lex:DescribeIntent
+                  - lex:DescribeSlot
+                  - lex:DescribeSlotType
+                  - lex:DescribeResourcePolicy
+                  - lex:CreateUploadUrl
+                  - lex:ListImports
+                  - lex:DescribeImport
+                  - lex:DeleteImport
+                  - lex:StartImport
+                  - lex:DeleteBotReplica
+                  - lex:DeleteCustomVocabulary
+                  - lex:DeleteSession
+                  - lex:DeleteUtterances
+                  - lex:DescribeBotChannel
+                  - lex:DescribeBotReplica
+                  - lex:GenerateBotElement
+                  - lex:GetSession
+                  - lex:ListTagsForResource
+                  - lex:BatchDeleteCustomVocabularyItem
+                  - lex:BatchCreateCustomVocabularyItem
+                  - lex:BatchUpdateCustomVocabularyItem
+                  - lex:BuildBotLocale
+                  - lex:CreateCustomVocabulary
+                  - lex:PutSession
+                  - lex:RecognizeText
+                  - lex:RecognizeUtterance
+                  - lex:StartConversation
+                  - lex:UpdateCustomVocabulary
+                  - lex:UpdateExport
+                  - lex:StartBotResourceGeneration
+                  - lex:DeleteBotChannel
+                  - lex:CreateBotChannel
+                  - lex:CreateBotReplica
+                  - lex:CreateExport
+                  - lex:DescribeExport
+                  - lex:ListBotLocales
+                  - lex:ListBotChannels
+                  - lex:ListBotVersions
+                  - lex:ListIntents
+                  - lex:ListSlots
+                  - lex:ListSlotTypes
+                  - lex:ListAggregatedUtterances
+                  - lex:ListBuiltInSlotTypes
+                  - lex:ListBuiltInIntents
+                  - lex:ListCustomVocabularyItems
+                  - lex:ListIntentMetrics
+                  - lex:ListIntentPaths
+                Resource:
+                  - "*"
+              # PARC-112 CMS POC WAF V2
+              - Effect: Allow
+                Action:
+                  - wafv2:Get*
+                  - wafv2:List*
+                  - wafv2:CreateIPSet
+                  - wafv2:DeleteIPSet
+                  - wafv2:UpdateIPSet
+                  - wafv2:CreateWebACL
+                  - wafv2:DeleteWebACL
+                  - wafv2:UpdateWebACL
+                  - wafv2:AssociateWebACL
+                  - wafv2:DisassociateWebACL
+                  - wafv2:PutLoggingConfiguration
+                  - wafv2:DeleteLoggingConfiguration
+                  - cloudwatch:ListMetrics
+                  - cloudwatch:GetMetricStatistics
+                  - ec2:DescribeRegions
+                Resource: '*'
+              # PARC-112 CMS POC Cloudfront
+              - Effect: Allow
+                Action:
+                  - cloudfront:List*
+                  - cloudfront:Get*
+                  - cloudfront:CopyDistribution
+                  - cloudfront:CreateCloudFrontOriginAccessIdentity
+                  - cloudfront:DeleteCloudFrontOriginAccessIdentity
+                  - cloudfront:UpdateCloudFrontOriginAccessIdentity
+                  - cloudfront:CreateDistribution
+                  - cloudfront:DeleteDistribution
+                  - cloudfront:UpdateDistribution
+                  - cloudfront:CreateCachePolicy
+                  - cloudfront:DeleteCachePolicy
+                  - cloudfront:UpdateCachePolicy
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - sns:Publish
+                Resource: '*'                
+
+  CostLambdaSNSTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: !Ref SNSTopicName
+
+  SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !Ref CostLambdaSNSTopic
+      Protocol: email
+      Endpoint: !Ref EmailRecipient
+
+  SNSSubscription02:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !Ref CostLambdaSNSTopic
+      Protocol: email
+      Endpoint: !Ref EmailRecipient02
+
+  SNSSubscription03:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !Ref CostLambdaSNSTopic
+      Protocol: email
+      Endpoint: !Ref EmailRecipient03
+
+  SNSSubscription04:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !Ref CostLambdaSNSTopic
+      Protocol: email
+      Endpoint: !Ref EmailRecipient04      
 
   CostReportLambda:
     Type: "AWS::Lambda::Function"
@@ -57,15 +410,21 @@ Resources:
         Variables:
           APP_NAME: !Ref AppName
           ENVIRONMENT: !Ref Environment
+          S3_FILE_NAME: !Ref S3FileName
+          S3_SOURCE_BUCKET: !Ref S3SourceBucketName
           EMAIL_RECIPIENT: !Ref EmailRecipient
+          SNS_TOPIC_ARN: !Ref CostLambdaSNSTopic
 
   LambdaTrigger:
     Type: "AWS::Events::Rule"
     Properties:
-      ScheduleExpression: "rate(5 minutes)"
+      Name: "Cost-Lambda-Event-Rule"
+      Description: "Event Rule to schedule Cost Monitoring Lambda"
+      State: ENABLED
+      ScheduleExpression: !Ref ScheduleExpression
       Targets:
         - Arn: !GetAtt CostReportLambda.Arn
-          Id: "CostReportLambdaTarget"
+          Id: "CostMonitoringLambdaTarget"
 
   LambdaPermission:
     Type: "AWS::Lambda::Permission"
@@ -73,3 +432,4 @@ Resources:
       FunctionName: !Ref CostReportLambda
       Action: "lambda:InvokeFunction"
       Principal: "events.amazonaws.com"
+      SourceArn: !GetAtt LambdaTrigger.Arn
