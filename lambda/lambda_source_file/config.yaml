@@ -1,0 +1,16 @@
+aws_cost_usage:
+  tag_settings:
+    - tag_key: "BusinessUnit"
+      tag_value: "PENG-180"
+      stack_name: "SageMaker-Notebook-Dev-Stack-2"
+      granularity: "DAILY"
+      metrics:
+        - "UnblendedCost"
+      total_budget: 500
+    - tag_key: "BusinessUnit"
+      tag_value: "PENG-187"
+      stack_name: "NotificationTimingModelStack"
+      granularity: "DAILY"
+      metrics:
+        - "UnblendedCost"
+      total_budget: 300

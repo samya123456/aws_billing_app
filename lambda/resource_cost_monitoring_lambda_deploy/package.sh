@@ -1,8 +1,8 @@
 #!/bin/bash
 
-DEFAULT_LAMBDA_DIR="lambda"
+DEFAULT_LAMBDA_DIR="lambda/resource_cost_monitoring_lambda_deploy"
 DEFAULT_ZIP_FILE="lambda_package.zip"
-S3BucketName="cost-calculator-python-perso"
+S3BucketName="peng-176-cost-calculator-python-bucket"
 S3BucketDeployRegion="us-east-1" ##change region based on working aws region
 
 # Accept parameters or use default values
@@ -12,15 +12,16 @@ ZIP_FILE="${2:-$DEFAULT_ZIP_FILE}"
 # Remove existing zip file
 if [ -f "$ZIP_FILE" ]; then
   rm "$ZIP_FILE"
+  echo "removing zip file"
 fi
 
 # Install dependencies into a temporary folder
 TEMP_DIR="temp_build"
 mkdir -p "$TEMP_DIR"
-pip install -r "$LAMBDA_DIR/requirements.txt" -t "$TEMP_DIR" > /dev/null
+pip3 install -r "$LAMBDA_DIR/requirements.txt" -t "$TEMP_DIR" > /dev/null
 
 # Copy the Lambda code into the temporary folder
-cp "$LAMBDA_DIR/"*.py "$TEMP_DIR"
+cp "$LAMBDA_DIR/"* "$TEMP_DIR"
 
 # Create the zip package
 cd "$TEMP_DIR" || exit
@@ -36,8 +37,8 @@ fi
 
 # enabling S3 bucket versioning
 
-echo "Enable versioning for Deployment bucket"
-aws s3api put-bucket-versioning --bucket $S3BucketName --versioning-configuration Status=Enabled
+# echo "Enable versioning for Deployment bucket"
+# aws s3api put-bucket-versioning --bucket $S3BucketName --versioning-configuration Status=Enabled
 aws s3 cp ${ZIP_FILE} s3://${S3BucketName}/
 
 rm -rf "$TEMP_DIR"

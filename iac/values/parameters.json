@@ -9,10 +9,42 @@
     },
     {
         "ParameterKey": "CodeS3Bucket",
-        "ParameterValue": "cost-calculator-python-perso"
+        "ParameterValue": "peng-176-cost-calculator-python-bucket"
     },
     {
         "ParameterKey": "CodeZipName",
-        "ParameterValue": "lambda_package.zip"
+        "ParameterValue": "lambda_package_123.zip"
+    },
+    {
+        "ParameterKey": "S3SourceBucketName",
+        "ParameterValue": "peng-176-cost-monitoring-lambda-source-bucket"
+    },
+    {
+        "ParameterKey": "S3FileName",
+        "ParameterValue": "version-1/config.yaml"
+    },
+    {
+        "ParameterKey": "SNSTopicName",
+        "ParameterValue": "AWSCostLambdaSNSTopic"
+    },
+    {
+        "ParameterKey": "EmailRecipient",
+        "ParameterValue": "snandy@mercuryfinancial.com"
+    },
+    {
+        "ParameterKey": "EmailRecipient02",
+        "ParameterValue": "dsharma@mercuryfinancial.com"
+    },
+    {
+        "ParameterKey": "EmailRecipient03",
+        "ParameterValue": "akatamreddy@mercuryfinancial.com"
+    },
+    {
+        "ParameterKey": "EmailRecipient04",
+        "ParameterValue": "sankem@mercuryfinancial.com"
+    },
+    {
+        "ParameterKey": "ScheduleExpression",
+        "ParameterValue": "cron(0 8 * * ? *)"
     }
 ]
